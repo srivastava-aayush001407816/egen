@@ -1,17 +1,27 @@
 package com.microservice.egen.data.model;
 
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "Payments")
 public class Payment {
 	
+	@Id
+	@Column
 	private int id;
+	@Column
 	private String method;
-	private Date date;
+	@Column
+	private String date;
+	@Column
 	private String confirmationNumber;
 	
 	public Payment() {}
 	
-	public Payment(int id, String method, Date date, String confirmationNumber) {
+	public Payment(int id, String method, String date, String confirmationNumber) {
 		this.id = id;
 		this.method = method;
 		this.date = date;
@@ -29,10 +39,10 @@ public class Payment {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getConfirmationNumber() {

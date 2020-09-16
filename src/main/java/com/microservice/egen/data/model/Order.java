@@ -3,36 +3,69 @@ package com.microservice.egen.data.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Orders")
 public class Order {
 	
+	@Id
+	@Column
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column
 	private String status;
+	@Column
 	private int customer_id;
+	@Column
 	private float subtotal;
+	@Column
 	private float tax;
+	@Column
 	private float shipping_charges;
+	@Column
 	private float total;
 	
+	@Column
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
 	private List<Item> items;
-	private List<Payment> payments;
+//	@Column
+//	@OneToMany
+//	private List<Payment> payments;
 	
-	
+	@Column
 	private String billing_addressline1;
+	@Column
 	private String billing_addressline2;
+	@Column
 	private String billing_city;
+	@Column
 	private String billing_state;
+	@Column
 	private String billing_zip;
+
 	
-	
+	@Column
 	private String shipping_addressline1;
+	@Column
 	private String shipping_addressline2;
+	@Column
 	private String shipping_city;
+	@Column
 	private String shipping_state;
+	@Column
 	private String shipping_zip;
 	
 	public Order() {
 		items = new ArrayList<Item>();
-		payments = new ArrayList<Payment>();
+//		payments = new ArrayList<Payment>();
 	}
 	
 	
@@ -59,7 +92,7 @@ public class Order {
 		this.shipping_state = shipping_state;
 		this.shipping_zip = shipping_zip;
 		items = new ArrayList<Item>();
-		payments = new ArrayList<Payment>();
+		//payments = new ArrayList<Payment>();
 	}
 
 
@@ -165,6 +198,13 @@ public class Order {
 	}
 	public void setShipping_zip(String shipping_zip) {
 		this.shipping_zip = shipping_zip;
+	}
+
+	public List<Item> getItems() {
+		return items;
+	}
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 
 
