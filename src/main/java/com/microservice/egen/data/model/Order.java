@@ -36,9 +36,9 @@ public class Order {
 	@Column
 	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
 	private List<Item> items;
-//	@Column
-//	@OneToMany
-//	private List<Payment> payments;
+	@Column
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
+	private List<Payment> payments;
 	
 	@Column
 	private String billing_addressline1;
@@ -65,7 +65,7 @@ public class Order {
 	
 	public Order() {
 		items = new ArrayList<Item>();
-//		payments = new ArrayList<Payment>();
+		payments = new ArrayList<Payment>();
 	}
 	
 	
@@ -92,7 +92,7 @@ public class Order {
 		this.shipping_state = shipping_state;
 		this.shipping_zip = shipping_zip;
 		items = new ArrayList<Item>();
-		//payments = new ArrayList<Payment>();
+		payments = new ArrayList<Payment>();
 	}
 
 
@@ -206,6 +206,11 @@ public class Order {
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-
+	public List<Payment> getPayments() {
+		return payments;
+	}
+	public void setPayments(List<Payment> payments) {
+		this.payments = payments;
+	}
 
 }

@@ -1,8 +1,13 @@
 package com.microservice.egen.data.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -11,6 +16,7 @@ public class Payment {
 	
 	@Id
 	@Column
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
 	private String method;
@@ -18,6 +24,11 @@ public class Payment {
 	private String date;
 	@Column
 	private String confirmationNumber;
+	@Column
+	private float amount;
+	
+	@ManyToOne
+	private Order order;
 	
 	public Payment() {}
 	
@@ -51,6 +62,17 @@ public class Payment {
 	public void setConfirmationNumber(String confirmationNumber) {
 		this.confirmationNumber = confirmationNumber;
 	}
+	
+	public float getAmount() {
+		return amount;
+	}
 
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
 }
