@@ -64,38 +64,7 @@ public class Order {
 	private String shipping_zip;
 	
 	public Order() {
-		items = new ArrayList<Item>();
-		payments = new ArrayList<Payment>();
 	}
-	
-	
-	
-	public Order(int id, String status, int customer_id, float subtotal, float tax, float shipping_charges, float total,
-			String billing_addressline1, String billing_addressline2, String billing_city, String billing_state,
-			String billing_zip, String shipping_addressline1, String shipping_addressline2, String shipping_city,
-			String shipping_state, String shipping_zip) {
-		this.id = id;
-		this.status = status;
-		this.customer_id = customer_id;
-		this.subtotal = subtotal;
-		this.tax = tax;
-		this.shipping_charges = shipping_charges;
-		this.total = total;
-		this.billing_addressline1 = billing_addressline1;
-		this.billing_addressline2 = billing_addressline2;
-		this.billing_city = billing_city;
-		this.billing_state = billing_state;
-		this.billing_zip = billing_zip;
-		this.shipping_addressline1 = shipping_addressline1;
-		this.shipping_addressline2 = shipping_addressline2;
-		this.shipping_city = shipping_city;
-		this.shipping_state = shipping_state;
-		this.shipping_zip = shipping_zip;
-		items = new ArrayList<Item>();
-		payments = new ArrayList<Payment>();
-	}
-
-
 
 	public int getId() {
 		return id;

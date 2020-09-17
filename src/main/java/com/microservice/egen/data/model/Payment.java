@@ -32,12 +32,6 @@ public class Payment {
 	
 	public Payment() {}
 	
-	public Payment(int id, String method, String date, String confirmationNumber) {
-		this.id = id;
-		this.method = method;
-		this.date = date;
-		this.confirmationNumber = confirmationNumber;
-	}
 	public int getId() {
 		return id;
 	}
