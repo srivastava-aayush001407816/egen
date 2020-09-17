@@ -1,11 +1,19 @@
 package com.microservice.egen.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,63 +29,40 @@ import com.microservice.egen.service.Orderservice;
 import com.microservice.egen.service.PaymentService;
 
 @RestController
-public class RestfulController {
-
+public class BatchController {
+	
+	@Autowired
+	JobLauncher jobLauncher;
+	
+	@Autowired
+	Job job;
+	
 	@Autowired
 	Orderservice orderService;
 	
 	@Autowired
-	ItemService itemService;
-	
-	@Autowired
 	PaymentService paymentService;
+	
+	@PostMapping("/load")
+	public BatchStatus load(@RequestBody Order order) throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{
 
-	@GetMapping("/order")
-	private List<Order> getAllOrders() {
-		return orderService.getAllOrders();
-	}
-
-	// creating a get mapping that retrieves the detail of a specific book
-	@GetMapping("/order/{orderid}")
-	private Order getorder(@PathVariable("orderid") int orderid) {
-		return orderService.getOrderById(orderid);
-	}
-
-	// creating a delete mapping that deletes a specified book
-	@DeleteMapping("/order/{orderid}")
-	private void deleteOrder(@PathVariable("orderid") int orderid) {
-		Order order = getorder(orderid);
-		for(Item i : order.getItems()) {
-			i.setOrder(order);
-			itemService.delete(i.getId());
-		}
-		for(Payment p:order.getPayments()) {
-			p.setOrder(order);
-			paymentService.delete(p.getId());
-		}
-		orderService.delete(orderid);
-	}
-
-	// creating post mapping that post the book detail in the database
-	@PostMapping("/order")
-	private int saveOrder(@RequestBody Order order) {
-		
-		//UUID uuid = UUID.randomUUID();
-		
 		orderService.saveOrUpdate(order);
-		for(Item i : order.getItems()) {
-			i.setOrder(order);
-			itemService.saveOrUpdate(i);
-		}
 		for(Payment p:order.getPayments()) {
 			p.setOrder(order);
 			paymentService.saveOrUpdate(p);
 		}
-		return order.getId();
+		Map<String, JobParameter> map = new HashMap<String, JobParameter>();
+		map.put("time", new JobParameter(System.currentTimeMillis()));
+		JobParameters jobParameter = new JobParameters(map);
+		JobExecution je = jobLauncher.run(job, jobParameter);
+		System.out.println("Job status "+je.getStatus());
+		System.out.println("Batch is running.. ");
+		while(je.isRunning())
+			System.out.println("...");
+		return je.getStatus();
 	}
-
-	// creating put mapping that updates the book detail
-	@PutMapping("/order/{orderid}")
+	
+	@PutMapping("/update/{orderid}")
 	private Order update(@RequestBody Order order,@PathVariable("orderid") int orderid) {
 		
 		
@@ -89,15 +74,6 @@ public class RestfulController {
 		fetchOrder.setShipping_charges(order.getShipping_charges());
 		fetchOrder.setTotal(order.getTotal());
 		
-		for(Item i : fetchOrder.getItems()) {
-			for(Item j:order.getItems()) {
-				if(i.getId()==j.getId()) {
-					i.setName(j.getName());
-					i.setOrder(order);
-					i.setQty(j.getQty());
-				}
-			}
-		}
 		
 		for(Payment i : fetchOrder.getPayments()) {
 			for(Payment j:order.getPayments()) {
@@ -122,11 +98,6 @@ public class RestfulController {
 		fetchOrder.setShipping_zip(order.getShipping_zip());
 		
 		orderService.saveOrUpdate(fetchOrder);
-		
-		for(Item i : fetchOrder.getItems()) {
-			i.setOrder(fetchOrder);
-			itemService.saveOrUpdate(i);
-		}
 		for(Payment p:fetchOrder.getPayments()) {
 			p.setOrder(fetchOrder);
 			paymentService.saveOrUpdate(p);

@@ -213,4 +213,19 @@ public class Order {
 		this.payments = payments;
 	}
 
+
+
+	@Override
+	public String toString() {
+		return "Order [status=" + status + ", customer_id=" + customer_id + ", subtotal=" + subtotal + ", tax=" + tax
+				+ ", shipping_charges=" + shipping_charges + ", total=" + total + ", items=" + items + ", payments="
+				+ payments + ", billing_addressline1=" + billing_addressline1 + ", billing_addressline2="
+				+ billing_addressline2 + ", billing_city=" + billing_city + ", billing_state=" + billing_state
+				+ ", billing_zip=" + billing_zip + ", shipping_addressline1=" + shipping_addressline1
+				+ ", shipping_addressline2=" + shipping_addressline2 + ", shipping_city=" + shipping_city
+				+ ", shipping_state=" + shipping_state + ", shipping_zip=" + shipping_zip + "]";
+	}
+	
+	
+
 }
